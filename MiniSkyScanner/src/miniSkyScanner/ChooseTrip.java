@@ -2,6 +2,7 @@ package miniSkyScanner;
 
 import java.util.*;
 
+
 public class ChooseTrip extends Membership {
 	private String nation = null;
 	String USA = "미국"; 
@@ -55,8 +56,8 @@ public void selectWhat() {
 			System.out.println("년도를 입력하세요");
 			System.out.print("YEAR> ");
 			year = sc.nextInt();
-			depDate += Integer.toString(year);
-			arrDate += Integer.toString(year);
+			depDate = Integer.toString(year);
+			arrDate = Integer.toString(year);
 			// 달을 입력하라는 문구와 프롬프트 문자 및 커서 출력, month라는 변수로 달에 해당하는 숫자를 입력받음
 			System.out.println("달을 입력하세요");
 			System.out.print("MONTH> ");
@@ -117,6 +118,7 @@ public void selectWhat() {
 			String answer = "";
 			answer = sc.next();
 			if (answer.equals("1") || answer.equals("네")) {
+				
 				break;
 	        } else if (answer.equals("2") || answer.equals("아니요")) {
 	        	continue;
@@ -184,5 +186,7 @@ public void selectWhat() {
 
     	
     }
+	
+
 	
 }
