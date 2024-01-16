@@ -5,7 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 
-
+import model.domain.arrivalDto;
+import model.domain.departureDto;
 
 public class ChooseTrip extends Membership {
 	private String nation = null;
@@ -171,7 +172,7 @@ public void selectWhat() {
     	timetable dep = new timetable();
     	timetable2 arr = new timetable2();
     	System.out.println("선택하신 날짜에 대한 " + nation + "시간표:");
-    	dep.showTimetableWithLabelsSeatsAndPrices(nation);
+//    	dep.showTimetableWithLabelsSeatsAndPrices(nation);
     	String final_nation = "";
     	if (this.nation.equals("미국")){
     		final_nation = "USA";
@@ -316,7 +317,84 @@ public void selectWhat() {
 
         return departure;
     }
-	
+	//전체 예약 시간표 보여주는 기능
+			public static arrivalDto selectArrTime(String country) throws Exception {
+		        Connection conn = null;
+		        PreparedStatement pstmt = null;
+		        ResultSet rs = null;
+		        arrivalDto arrival = null;
+
+		        try {
+		            conn = Util.getConnection();
+		            // 수정된 SQL 쿼리: "select * from departure where destination LIKE ?"
+		            pstmt = conn.prepareStatement("select * from arrival where departure LIKE ?");
+		            // 수정된 부분: pstmt.setString(1, country);
+
+		            pstmt.setString(1, "%" + country + "%");
+		            rs = pstmt.executeQuery();
+		            System.out.printf("%-5s %-6s %-7s %-7s %-4s %-9s\n", "번호", "목적지", "시간", "잔여좌석", "가격", "출발지");
+		            while (rs.next()) {
+		            	arrival = new arrivalDto(rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+		                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+		                // 여러 레코드를 출력하려면 toString()을 사용하지 않고 직접 출력
+//		                System.out.println(departure);
+
+		                System.out.printf("%-5d %-6s %-7s %6d석 %10d원 %-6s\n", rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+		                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+		      
+		                
+		            } 
+		            
+
+		        } finally {
+		            if (rs != null) {
+		                rs.close();
+		            }
+		            Util.close(conn, pstmt);
+		        }
+
+		        return arrival;
+		    }
+			
+			
+			//출발 비행기 선택한것 확인하게 보여주는 코드
+			public static arrivalDto selectArrIndexTrip(int index) throws Exception {
+		        Connection conn = null;
+		        PreparedStatement pstmt = null;
+		        ResultSet rs = null;
+		        arrivalDto arrival = null;
+
+		        try {
+		            conn = Util.getConnection();
+		            // 수정된 SQL 쿼리: "select * from departure where destination LIKE ?"
+		            pstmt = conn.prepareStatement("select * from arrival where index_ = ?");
+		            // 수정된 부분: pstmt.setString(1, country);
+
+		            pstmt.setInt(1, index);
+		            rs = pstmt.executeQuery();
+		            System.out.printf("%-5s %-6s %-7s %-7s %-4s %-9s\n", "번호", "목적지", "시간", "잔여좌석", "가격", "출발지");
+		            while (rs.next()) {
+		                arrival = new arrivalDto(rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+		                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+		                // 여러 레코드를 출력하려면 toString()을 사용하지 않고 직접 출력
+//		                System.out.println(departure);
+
+		                System.out.printf("%-5d %-6s %-7s %6d석 %10d원 %-6s\n", rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+		                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+		      
+		                
+		            } 
+		            
+
+		        } finally {
+		            if (rs != null) {
+		                rs.close();
+		            }
+		            Util.close(conn, pstmt);
+		        }
+
+		        return arrival;
+		    }
 
 
 	

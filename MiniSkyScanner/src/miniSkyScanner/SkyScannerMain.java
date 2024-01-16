@@ -19,7 +19,7 @@ public class SkyScannerMain {
 		DateTimeFormatter dateFormatter1=DateTimeFormatter.ofPattern("yyyyMMddHH:mm");
 		String depDate = trip.depDate;
 		String arrDate = trip.arrDate;
-		String chosenNation = trip.setNation();
+		String chosenNation = trip.getNation();
 		while (chosenTripInfo == null) {
 			switch(chosenNation) {
 			case "미국":
@@ -48,7 +48,11 @@ public class SkyScannerMain {
 				TripSummary.insert("dd", "대한민국", chosenNation, depDate.substring(0,8), depDate.substring(8,13));
 				TripSummary.insert("dd", chosenNation, "대한민국", arrDate.substring(0,8), arrDate.substring(8,13));
 				tripInfo.timeDif(chosenTripInfo, depDate, arrDate);
-				tripInfo.currency(chosenTripInfo, 1000000);
+				System.out.print("가져가시는 예산을 입력해주세요 >> ");
+				int num = sc.nextInt();
+				
+				
+				tripInfo.currency(chosenTripInfo, num);
 			}
 			else if (s.toLowerCase().equals("n")) {
 				System.out.println("다시 국가를 선택하세요.");
