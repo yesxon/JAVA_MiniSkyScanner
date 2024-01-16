@@ -45,8 +45,8 @@ public class SkyScannerMain {
 			if (s.toLowerCase().equals("y")) {
 				System.out.println("최종 예약 내역입니다.");
 				System.out.println(depDate);
-				TripSummary.insert("dd", "대한민국", chosenNation, depDate.substring(0,8), depDate.substring(8,13));
-				TripSummary.insert("dd", chosenNation, "대한민국", arrDate.substring(0,8), arrDate.substring(8,13));
+				TripSummary.insert(member.getId(), "대한민국", chosenNation, depDate.substring(0,8), depDate.substring(8,13));
+				TripSummary.insert(member.getId(), chosenNation, "대한민국", arrDate.substring(0,8), arrDate.substring(8,13));
 				tripInfo.timeDif(chosenTripInfo, depDate, arrDate);
 				System.out.print("가져가시는 예산을 입력해주세요 >> ");
 				int num = sc.nextInt();
@@ -65,7 +65,7 @@ public class SkyScannerMain {
 			System.out.println("본인의 예약 내역을 확인하고 싶다면 'y'를 입력하세요.");
 			String check = sc.next();
 			if (check.toLowerCase().equals("y")) {
-				TripSummary.select("dd");
+				TripSummary.select(member.getId());
 			} else {
 				System.out.println("즐거운 여행 되시길 바랍니다.");
 			}
