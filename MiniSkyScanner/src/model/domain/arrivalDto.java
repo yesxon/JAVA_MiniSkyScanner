@@ -2,11 +2,9 @@ package model.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-
 @AllArgsConstructor
 @Getter
-public class departureDto {
+public class arrivalDto {
 	int index;
 	String destination;
 	String dep_time;
