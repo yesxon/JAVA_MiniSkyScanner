@@ -1,17 +1,30 @@
 package miniSkyScanner;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Scanner;
+
+import lombok.Getter;
+import lombok.Setter;
+import yeseonTest.DataController;
+
+@Getter
+@Setter
 public class Membership {
 	private String id;
     private String name;        // 이름
     private String personalYY;  // 태어난 년도
     private String personalMM;  // 태어난 월
     private String personalDD;  // 태어난 일
+    private String birthdate;	// 연+월+일
     private String email;       // 이메일
     private String address;     // 주소
     private String pw;          // 카드 비밀번호
+    
+    public void setId(String id) {
+        this.id = id;
+    } //setId: Id는 null이 될 수 없으므로 setter 필요.
     // 회원가입 양식
-    public void membershipGuide() {
+    public void membershipGuide() throws SQLException {
         Scanner sc = new Scanner(System.in);
         System.out.println("\n[INFO] 안녕하세요. 스카이스캐너 입니다!\n"
                 + "항공권 구입을 위해선 회원가입이 필요합니다.\n"
@@ -32,12 +45,14 @@ public class Membership {
             }
         }
     }
-    public void personalData() {
+    public void personalData() throws SQLException {
         Scanner sc = new Scanner(System.in);
         System.out.println("\n=================================================================\n");
         System.out.println("[INFO] 회원가입을 위해 아래의 양식을 채워주세요.\n");
+        System.out.print("* id : ");
+        this.setId(sc.next());
         System.out.print("* 이름 : ");
-        this.name = sc.next();
+        this.setName(sc.next());
         // 미성년자는 가입할 수 없다.
         // 생년월일은 조건에 맞지 않으면 다시 입력을 해야된다.
         int personalYYnum = 0;
@@ -48,7 +63,7 @@ public class Membership {
         int yy = cal.get(Calendar.YEAR);
         for (; ; ) {
             System.out.print("* 태어난 연도 : ");
-            this.personalYY = sc.next();
+            this.setPersonalYY(sc.next());
             personalYYnum = Integer.parseInt(personalYY);
             if (personalYYnum == yy || personalYYnum > yy - 20 && personalYYnum < yy) {
                 System.out.println("[ERROR] 미성년자는 항공권 구매할 수 없습니다."
@@ -63,7 +78,7 @@ public class Membership {
         }
         for (; ; ) {
             System.out.print("* 태어난 월 : ");
-            this.personalMM = sc.next();
+            this.setPersonalMM(sc.next());
             personalMMnum = Integer.parseInt(personalMM);
             if (personalMMnum == 0 || personalMMnum > 12) {
                 System.out.println("[ERROR] 잘못된 입력입니다."
@@ -78,7 +93,7 @@ public class Membership {
         int day_count = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         for (; ; ) {
             System.out.print("* 태어난 일 : ");
-            this.personalDD = sc.next();
+            this.setPersonalDD(sc.next());
             personalDDnum = Integer.parseInt(personalDD);
             if (personalDDnum == 0 || personalDDnum > day_count + 1) {
                 System.out.println("[ERROR] 잘못된 입력입니다."
@@ -87,11 +102,19 @@ public class Membership {
                 break;
             }
         }
+        String birthYear = Integer.toString(personalYYnum);
+        String birthMonth = Integer.toString(personalMMnum);
+        String birthDay = Integer.toString(personalDDnum);
+        
+        this.birthdate = birthYear + (birthMonth.length() < 2 ? "0" : "") + birthMonth 
+                + (birthDay.length() < 2 ? "0" : "") + birthDay;
+        
         System.out.print("* 주소 : ");
-        this.address = sc.next();
+        this.setAddress(sc.next());
         System.out.print("* 결제 비밀번호 : ");
         sc.nextLine(); // next() 오류 방지
-        this.pw = sc.next();
+        this.setPw(sc.next());
+        DataController.insert(this.id, this.name, this.birthdate, this.email, this.address, this.pw);
         System.out.println("\n[INFO] 회원가입이 완료되었습니다.");
         System.out.println("\n=================================================================");
     }
