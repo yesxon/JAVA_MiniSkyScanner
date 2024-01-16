@@ -54,5 +54,5 @@ public class National extends ChooseTrip {
 		System.out.println("원화 기준 환율: " + exchangeRate);
 		System.out.println("----------------------------");
 	}
-	// 실행 메소드
+	// 실행 메소드.
 }
