@@ -12,7 +12,7 @@ public class Membership {
     // 회원가입 양식
     public void membershipGuide() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("\n[INFO] 안녕하세요. 스카이스캐너 입니다.\n"
+        System.out.println("\n[INFO] 안녕하세요. 스카이스캐너 입니다!\n"
                 + "항공권 구입을 위해선 회원가입이 필요합니다.\n"
                 + "회원가입을 진행하시겠습니까?\n"
                 + "[1] 예\t[2] 아니요");
