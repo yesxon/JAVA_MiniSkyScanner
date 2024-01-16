@@ -2,13 +2,14 @@ package miniSkyScanner;
 import java.util.Calendar;
 import java.util.Scanner;
 public class Membership {
-    String name;        // 이름
-    String personalYY;  // 태어난 년도
-    String personalMM;  // 태어난 월
-    String personalDD;  // 태어난 일
-    String email;       // 이메일
-    String address;     // 주소
-    String pw;          // 카드 비밀번호
+	private String id;
+    private String name;        // 이름
+    private String personalYY;  // 태어난 년도
+    private String personalMM;  // 태어난 월
+    private String personalDD;  // 태어난 일
+    private String email;       // 이메일
+    private String address;     // 주소
+    private String pw;          // 카드 비밀번호
     // 회원가입 양식
     public void membershipGuide() {
         Scanner sc = new Scanner(System.in);
