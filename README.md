@@ -13,7 +13,7 @@
 
 ---
 
-## Team
+## Team members
 
 - 박예선 [:octocat:](http://github.com/yesxon) [:mailbox:parkyeseon@gmail.com](mailto::mailbox:parkyeseon@gmail.com)
 - 이한슬 [:octocat:](http://github.com/LHSeul) [:mailbox:](mailto::mailbox:tngudzzz@gmail.com)lhsp936@gmail.com
@@ -22,7 +22,7 @@
 
 ---
 
-## Trouble Shootings
+## Trouble Shooting
 
 - 이클립스에서 git 브랜치를 생성하여 버전 관리할 때  충돌이 빈번히 발생→ 터미널로 해결
 - 국가 선택 메뉴가 2번 반복되는 현상 → setNation이라 2번 국가를 받아오도록 되어 있었음. 이를 getNation으로 변경
