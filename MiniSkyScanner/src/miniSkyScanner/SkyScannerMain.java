@@ -1,11 +1,11 @@
 package miniSkyScanner;
 
-import java.time.LocalDateTime;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class SkyScannerMain {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// 각 국가에 대한 National 객체 생성
 		Membership member = new Membership();
 		ChooseTrip trip = new ChooseTrip();
@@ -17,9 +17,9 @@ public class SkyScannerMain {
 		trip.selectWhat();
 
 		DateTimeFormatter dateFormatter1=DateTimeFormatter.ofPattern("yyyyMMddHH:mm");
-		String depDate = trip.depDate.substring(4);
-		String arrDate = trip.arrDate.substring(4);
-		String chosenNation = trip.setNation();
+		String depDate = trip.depDate;
+		String arrDate = trip.arrDate;
+		String chosenNation = trip.getNation();
 		while (chosenTripInfo == null) {
 			switch(chosenNation) {
 			case "미국":
@@ -44,8 +44,15 @@ public class SkyScannerMain {
 
 			if (s.toLowerCase().equals("y")) {
 				System.out.println("최종 예약 내역입니다.");
+				System.out.println(depDate);
+				TripSummary.insert(member.getId(), "대한민국", chosenNation, depDate.substring(0,8), depDate.substring(8,13));
+				TripSummary.insert(member.getId(), chosenNation, "대한민국", arrDate.substring(0,8), arrDate.substring(8,13));
 				tripInfo.timeDif(chosenTripInfo, depDate, arrDate);
-				tripInfo.currency(chosenTripInfo, 1000000);
+				System.out.print("가져가시는 예산을 입력해주세요 >> ");
+				int num = sc.nextInt();
+				
+				
+				tripInfo.currency(chosenTripInfo, num);
 			}
 			else if (s.toLowerCase().equals("n")) {
 				System.out.println("다시 국가를 선택하세요.");
@@ -55,6 +62,14 @@ public class SkyScannerMain {
 				System.out.println("다시 입력해주세요.");
 				chosenTripInfo = null;
 			}
+			System.out.println("본인의 예약 내역을 확인하고 싶다면 'y'를 입력하세요.");
+			String check = sc.next();
+			if (check.toLowerCase().equals("y")) {
+				TripSummary.select(member.getId());
+			} else {
+				System.out.println("즐거운 여행 되시길 바랍니다.");
+			}
 		}
+		
 	}
 }

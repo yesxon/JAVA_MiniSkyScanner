@@ -1,6 +1,12 @@
 package miniSkyScanner;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
+
+import model.domain.arrivalDto;
+import model.domain.departureDto;
 
 public class ChooseTrip extends Membership {
 	private String nation = null;
@@ -55,8 +61,8 @@ public void selectWhat() {
 			System.out.println("년도를 입력하세요");
 			System.out.print("YEAR> ");
 			year = sc.nextInt();
-			depDate += Integer.toString(year);
-			arrDate += Integer.toString(year);
+			depDate = Integer.toString(year);
+			arrDate = Integer.toString(year);
 			// 달을 입력하라는 문구와 프롬프트 문자 및 커서 출력, month라는 변수로 달에 해당하는 숫자를 입력받음
 			System.out.println("달을 입력하세요");
 			System.out.print("MONTH> ");
@@ -117,6 +123,7 @@ public void selectWhat() {
 			String answer = "";
 			answer = sc.next();
 			if (answer.equals("1") || answer.equals("네")) {
+				
 				break;
 	        } else if (answer.equals("2") || answer.equals("아니요")) {
 	        	continue;
@@ -165,24 +172,230 @@ public void selectWhat() {
     	timetable dep = new timetable();
     	timetable2 arr = new timetable2();
     	System.out.println("선택하신 날짜에 대한 " + nation + "시간표:");
-    	dep.showTimetableWithLabelsSeatsAndPrices(nation);
+//    	dep.showTimetableWithLabelsSeatsAndPrices(nation);
+    	String final_nation = "";
+    	if (this.nation.equals("미국")){
+    		final_nation = "USA";
+    	}
+    	else if (this.nation.equals("이탈리아")){
+    		final_nation = "ITALY";
+    	}
+    	else {
+    		final_nation = "VIETNAM";
+    	}
+    	try {
+            //정상 실행 브라우저 출력 위임(success View)
+
+            System.out.println("====================");
+            selectDepTime(final_nation);
+    } catch (Exception e) {
+            e.printStackTrace();//관리자만 확인 가능한 콘솔 메세지
+            System.out.println("잘못된 정보를 입력하셨습니다");
+    } 
     	System.out.println("원하시는 일정의 번호를 선택해 주세요");
     	int answer = sc.nextInt();
     	System.out.println("선택하신 일정은");
-        System.out.printf("%-5s %-6s %-7s %4s\n", "번호", "시간", "잔여좌석", "가격");
-    	System.out.printf("%-5d %-6s %5d %8d원\n", answer, dep.getTimetable(nation)[answer-1], dep.getRemainingSeats(nation)[answer-1], dep.getPrices(nation)[answer-1]);
+//        System.out.printf("%-5s %-6s %-7s %4s\n", "번호", "시간", "잔여좌석", "가격");
+//    	System.out.printf("%-5d %-6s %5d %8d원\n", answer, dep.getTimetable(nation)[answer-1], dep.getRemainingSeats(nation)[answer-1], dep.getPrices(nation)[answer-1]);
+    	try {
+            //정상 실행 브라우저 출력 위임(success View)
+
+            System.out.println("====================");
+        	depDate += selectIndexTrip(answer).getDep_time();
+        	System.out.println();
+    } catch (Exception e) {
+            e.printStackTrace();//관리자만 확인 가능한 콘솔 메세지
+            System.out.println("잘못된 정보를 입력하셨습니다");
+    } 
     	
-    	depDate += dep.getTimetable(nation)[answer-1];
-    	System.out.println();
-    	arr.showTimetableWithLabelsSeatsAndPrices(nation);
+
+//    	arr.showTimetableWithLabelsSeatsAndPrices(nation);
+    	try {
+            //정상 실행 브라우저 출력 위임(success View)
+
+            System.out.println("====================");
+            selectArrTime(final_nation);
+    } catch (Exception e) {
+            e.printStackTrace();//관리자만 확인 가능한 콘솔 메세지
+    }
     	System.out.println("돌아오는 비행기를 선택해주세요");
     	int answer2 = sc.nextInt();
     	System.out.println("선택하신 일정은");
-        System.out.printf("%-5s %-6s %-7s %4s\n", "번호", "시간", "잔여좌석", "가격");
-    	System.out.printf("%-5d %-6s %5d %8d원\n", answer, dep.getTimetable(nation)[answer-1], dep.getRemainingSeats(nation)[answer-1], dep.getPrices(nation)[answer-1]);
-    	arrDate += arr.getTimetable(nation)[answer-1];
+//        System.out.printf("%-5s %-6s %-7s %4s\n", "번호", "시간", "잔여좌석", "가격");
+//    	System.out.printf("%-5d %-6s %5d %8d원\n", answer, dep.getTimetable(nation)[answer-1], dep.getRemainingSeats(nation)[answer-1], dep.getPrices(nation)[answer-1]);
+    	try {
+            //정상 실행 브라우저 출력 위임(success View)
+
+            System.out.println("====================");
+            
+        	arrDate += selectArrIndexTrip(answer2).getDep_time();
+        	System.out.println();
+    } catch (Exception e) {
+            e.printStackTrace();//관리자만 확인 가능한 콘솔 메세지
+            System.out.println("잘못된 정보를 입력하셨습니다");
+    } 
+    	
 
     	
     }
+	
+	//전체 예약 시간표 보여주는 기능
+	public static departureDto selectDepTime(String country) throws Exception {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        departureDto departure = null;
+
+        try {
+            conn = Util.getConnection();
+            // 수정된 SQL 쿼리: "select * from departure where destination LIKE ?"
+            pstmt = conn.prepareStatement("select * from departure where destination LIKE ?");
+            // 수정된 부분: pstmt.setString(1, country);
+
+            pstmt.setString(1, "%" + country + "%");
+            rs = pstmt.executeQuery();
+            System.out.printf("%-5s %-6s %-7s %-7s %-4s %-9s\n", "번호", "목적지", "시간", "잔여좌석", "가격", "출발지");
+            while (rs.next()) {
+                departure = new departureDto(rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+                // 여러 레코드를 출력하려면 toString()을 사용하지 않고 직접 출력
+//                System.out.println(departure);
+
+                System.out.printf("%-5d %-6s %-7s %6d석 %10d원 %-6s\n", rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+      
+                
+            } 
+            
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            Util.close(conn, pstmt);
+        }
+
+        return departure;
+    }
+	
+	
+	//출발 비행기 선택한것 확인하게 보여주는 코드
+	public static departureDto selectIndexTrip(int index) throws Exception {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        departureDto departure = null;
+
+        try {
+            conn = Util.getConnection();
+            // 수정된 SQL 쿼리: "select * from departure where destination LIKE ?"
+            pstmt = conn.prepareStatement("select * from departure where index_ = ?");
+            // 수정된 부분: pstmt.setString(1, country);
+
+            pstmt.setInt(1, index);
+            rs = pstmt.executeQuery();
+            System.out.printf("%-5s %-6s %-7s %-7s %-4s %-9s\n", "번호", "목적지", "시간", "잔여좌석", "가격", "출발지");
+            while (rs.next()) {
+                departure = new departureDto(rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+                // 여러 레코드를 출력하려면 toString()을 사용하지 않고 직접 출력
+//                System.out.println(departure);
+
+                System.out.printf("%-5d %-6s %-7s %6d석 %10d원 %-6s\n", rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+      
+                
+            } 
+            
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            Util.close(conn, pstmt);
+        }
+
+        return departure;
+    }
+	//전체 예약 시간표 보여주는 기능
+			public static arrivalDto selectArrTime(String country) throws Exception {
+		        Connection conn = null;
+		        PreparedStatement pstmt = null;
+		        ResultSet rs = null;
+		        arrivalDto arrival = null;
+
+		        try {
+		            conn = Util.getConnection();
+		            // 수정된 SQL 쿼리: "select * from departure where destination LIKE ?"
+		            pstmt = conn.prepareStatement("select * from arrival where departure LIKE ?");
+		            // 수정된 부분: pstmt.setString(1, country);
+
+		            pstmt.setString(1, "%" + country + "%");
+		            rs = pstmt.executeQuery();
+		            System.out.printf("%-5s %-6s %-7s %-7s %-4s %-9s\n", "번호", "목적지", "시간", "잔여좌석", "가격", "출발지");
+		            while (rs.next()) {
+		            	arrival = new arrivalDto(rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+		                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+		                // 여러 레코드를 출력하려면 toString()을 사용하지 않고 직접 출력
+//		                System.out.println(departure);
+
+		                System.out.printf("%-5d %-6s %-7s %6d석 %10d원 %-6s\n", rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+		                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+		      
+		                
+		            } 
+		            
+
+		        } finally {
+		            if (rs != null) {
+		                rs.close();
+		            }
+		            Util.close(conn, pstmt);
+		        }
+
+		        return arrival;
+		    }
+			
+			
+			//출발 비행기 선택한것 확인하게 보여주는 코드
+			public static arrivalDto selectArrIndexTrip(int index) throws Exception {
+		        Connection conn = null;
+		        PreparedStatement pstmt = null;
+		        ResultSet rs = null;
+		        arrivalDto arrival = null;
+
+		        try {
+		            conn = Util.getConnection();
+		            // 수정된 SQL 쿼리: "select * from departure where destination LIKE ?"
+		            pstmt = conn.prepareStatement("select * from arrival where index_ = ?");
+		            // 수정된 부분: pstmt.setString(1, country);
+
+		            pstmt.setInt(1, index);
+		            rs = pstmt.executeQuery();
+		            System.out.printf("%-5s %-6s %-7s %-7s %-4s %-9s\n", "번호", "목적지", "시간", "잔여좌석", "가격", "출발지");
+		            while (rs.next()) {
+		                arrival = new arrivalDto(rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+		                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+		                // 여러 레코드를 출력하려면 toString()을 사용하지 않고 직접 출력
+//		                System.out.println(departure);
+
+		                System.out.printf("%-5d %-6s %-7s %6d석 %10d원 %-6s\n", rs.getInt("index_"), rs.getString("destination"), rs.getString("dep_time"),
+		                        rs.getInt("left_seat"), rs.getInt("price"), rs.getString("departure"));
+		      
+		                
+		            } 
+		            
+
+		        } finally {
+		            if (rs != null) {
+		                rs.close();
+		            }
+		            Util.close(conn, pstmt);
+		        }
+
+		        return arrival;
+		    }
+
+
 	
 }

@@ -1,6 +1,9 @@
 package miniSkyScanner;
 
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +18,8 @@ public class TripSummary {
 			put("이탈리아","유로");
 			put("베트남","동");
 		}};
-
+		
+		
 		
 	void timeDif(National na, String deptTime1, String deptTime2) { // deptTime1: 여행 출발날 비행기 타는 시간, deptTime2: 한국으로 돌아오는 날 여행지에서 비행기를 타는 시간
 		LocalDateTime dateTime1 = LocalDateTime.parse(deptTime1, dateFormatter1);
@@ -34,7 +38,69 @@ public class TripSummary {
 		double exchangedBudget = budget*na.getExchangeRate();
 		String formattedBudget = decimalFormatter.format(exchangedBudget); // 소수점 표기 두자리
 		System.out.println("현지 환율은 1000원당 "+decimalFormatter.format(na.getExchangeRate()*1000)+currency.get(na.getNation())+"입니다.");
-		System.out.println("예산을 전부 환전하면 "+formattedBudget+currency.get(na.getNation())+"입니다.");
+		System.out.println("예산을 전부 환전하면 "+formattedBudget+currency.get(na.getNation())+"입니다."); 
+		}
 		
+	    public static String insert(String id, String dept, String dest, String deptDate, String deptTime) throws Exception{
+	    	Connection conn = null;
+	        PreparedStatement pstmt = null;
+			Random rd = new Random();
+			rd.setSeed(System.currentTimeMillis());
+			int reservationId=rd.nextInt(100000000);
+	        
+	        try {
+
+	        		conn = Util.getConnection();
+	                
+	                pstmt = conn.prepareStatement("insert into reservation (reservationId, id, dept, dest, deptDate, deptTime) values (?, ?, ?, ?, ?, ?)");
+	                
+	                
+	                pstmt.setInt(1, reservationId);
+	                pstmt.setString(2, id);
+	                pstmt.setString(3, dept);
+	                pstmt.setString(4, dest);
+	                pstmt.setString(5, deptDate);
+	                pstmt.setString(6, deptTime);
+	                
+	                int result = pstmt.executeUpdate();
+	                
+	                if(result == 1) {
+	                        return "예약 내역이 저장되었습니다";
+	                }        
+	                
+	        } catch (Exception e) {
+	                e.printStackTrace();
+	        } finally { 
+	                Util.close(conn, pstmt);
+	        }
+	        
+	        return "예약 내역 저장에 실패했습니다";    
 	}
+        public static void select(String id) throws Exception{
+            Connection conn = null;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+                   
+            
+            try {
+                    conn = Util.getConnection();
+                    pstmt = conn.prepareStatement("select * from reservation where id=?");
+                    pstmt.setString(1, id);
+                    rs = pstmt.executeQuery();
+        			while(rs.next()) {
+        				System.out.println("예약 번호: " + rs.getInt("reservationId") + " /" 
+        									+"출발지: " + rs.getString("dept") + " /"
+        									+"목적지: " + rs.getString("dest") + " /"
+        									+"출발일: " +rs.getString("deptDate")+ " /"
+        									+"출발 시간: "+ rs.getString("deptTime")); 
+        			}        
+                    
+            } catch (Exception e) {
+                    e.printStackTrace();
+            } finally { 
+                    Util.close(conn, pstmt, rs);
+            }
+            
+    }
+	    
 }
