@@ -1,6 +1,6 @@
 # Mini SkyScanner
 
-- 우리FISA AI 엔지니어링 JAVA 미니 프로젝트
+> 우리FISA AI 엔지니어링 JAVA 미니 프로젝트
 
 ---
 
@@ -16,10 +16,10 @@
 
 ## Team
 
-- 박예선 [:octocat:](http://github.com/seungminnk) [:mailbox:parkyeseon@gmail.com](mailto::mailbox:parkyeseon@gmail.com)
-- 이한슬 [:octocat:](http://github.com/tngudzzz) [:mailbox:](mailto::mailbox:tngudzzz@gmail.com)lhsp936@gmail.com
-- 한상민 [:octocat:](https://github.com/sggnology) [:mailbox:](mailto::mailbox:sggnology@gmail.com)sorkdhks33@gmail.com
-- 김찬기 [:octocat:](http://github.com/yesxon) [mailbox:](mailto::mailbox:sggnology@gmail.com)changi9734@gmail.com
+- 박예선 [:octocat:](http://github.com/yesxon) [:mailbox:parkyeseon@gmail.com](mailto::mailbox:parkyeseon@gmail.com)
+- 이한슬 [:octocat:](http://github.com/LHSeul) [:mailbox:](mailto::mailbox:tngudzzz@gmail.com)lhsp936@gmail.com
+- 한상민 [:octocat:](https://github.com/Han-sann-min) [:mailbox:](mailto::mailbox:sggnology@gmail.com)sorkdhks33@gmail.com
+- 김찬기 [:octocat:](http://github.com/K-Changer) [:mailbox:](mailto::mailbox:sggnology@gmail.com)changi9734@gmail.com
 
 ---
 
